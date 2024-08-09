@@ -11,6 +11,9 @@ let query = ""
 
 // fns
 const onSearchKey = async ( event ) => {
+
+    if ( ! event.key ) return
+
     switch ( event.key.toLowerCase() ) {
         case 'escape':
             query = ''
@@ -23,7 +26,7 @@ const onSearchKey = async ( event ) => {
 }
 
 const onWindowKey = event => {
-    if ( event.key.toLowerCase() === 'k' && event.metaKey ) {
+    if ( [ 'k', 'K' ].includes( event.key ) && event.metaKey ) {
         const el = document.getElementById( 'query' )
         if ( el ) {
             el.focus()

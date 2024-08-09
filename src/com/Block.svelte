@@ -5,18 +5,6 @@ import { urls } from "$lib/url-helper.js";
 export let block
 export let networkId
 
-const renderTransactions = hashes => {
-    let html = `<div class="flex flex-col gap-1">`
-
-    html += hashes
-        .map( hash => `<a class="link link-hover" href="${urls.txn( networkId, hash )}">${hash}</a>` )
-        .join( `\n` )
-
-    html += `</div>`
-
-    return html
-}
-
 const keys = [
     { key: "number" },
     { key: "nonce" },
@@ -35,14 +23,14 @@ const keys = [
     { key: "receiptsRoot" },
     { key: "stateRoot" },
     { key: "timestamp" },
-    { key: "transactions", render: renderTransactions },
 ]
 
-const render = val => {
-    if ( typeof val === 'object' ) {
-        return JSON.stringify( val )
+const copy = async text => {
+    try {
+        await navigator.clipboard.writeText( text )
+    } catch ( err ) {
+        console.log( err )
     }
-    return val
 }
 </script>
 
@@ -65,6 +53,25 @@ const render = val => {
                             }</td>
                         </tr>
                     {/each}
+                    <tr>
+                        <th class="w-44 align-text-top">transactions</th>
+                        <td class="font-mono">
+                            {#if block.transactions.length}
+                                <div class="flex flex-col gap-1">
+                                    {#each block.transactions as hash}
+                                        <div class="flex items-center">
+                                            <button
+                                                class="btn btn-xs btn-ghost"
+                                                on:click={()=>copy(hash)}>
+                                                <span class="icon-[solar--copy-bold-duotone]"></span>
+                                            </button>
+                                            <a class="link link-hover ml-1" href="{urls.txn( networkId, hash )}">{hash}</a>
+                                        </div>
+                                    {/each}
+                                </div>
+                            {/if}
+                        </td>
+                    </tr>
                 </tbody>
             {/if}
         </table>
