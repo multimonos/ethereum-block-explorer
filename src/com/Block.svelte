@@ -1,27 +1,41 @@
 <script>
-import {getContext} from "svelte";
 import Card from "./card/Card.svelte";
+import { urls } from "$lib/url-helper.js";
 
 export let block
+export let networkId
+
+const renderTransactions = hashes => {
+    let html = `<div class="flex flex-col gap-1">`
+
+    html += hashes
+        .map( hash => `<a class="link link-hover" href="${urls.txn( networkId, hash )}">${hash}</a>` )
+        .join( `\n` )
+
+    html += `</div>`
+
+    return html
+}
 
 const keys = [
-    "number",
-    "nonce",
-    "hash",
-    "parentHash",
-    "baseFeePerGas",
-    "blobGasUsed",
-    "difficulty",
-    "excessBlobGas",
-    "extraData",
-    "gasLimit",
-    "gasUsed",
-    "miner",
-    "parentBeaconBlockRoot",
-    "prevRandao",
-    "receiptsRoot",
-    "stateRoot",
-    "timestamp",
+    { key: "number" },
+    { key: "nonce" },
+    { key: "hash" },
+    { key: "parentHash" },
+    { key: "baseFeePerGas" },
+    { key: "blobGasUsed" },
+    { key: "difficulty" },
+    { key: "excessBlobGas" },
+    { key: "extraData" },
+    { key: "gasLimit" },
+    { key: "gasUsed" },
+    { key: "miner" },
+    { key: "parentBeaconBlockRoot" },
+    { key: "prevRandao" },
+    { key: "receiptsRoot" },
+    { key: "stateRoot" },
+    { key: "timestamp" },
+    { key: "transactions", render: renderTransactions },
 ]
 
 const render = val => {
@@ -30,8 +44,6 @@ const render = val => {
     }
     return val
 }
-
-const provider = getContext('provider')
 </script>
 
 <Card>
@@ -43,36 +55,18 @@ const provider = getContext('provider')
         <table class="table table-sm">
             {#if keys.length}
                 <tbody>
-                    {#each keys as key}
+                    {#each keys as def}
                         <tr>
-                            <th class="w-44">{key}</th>
-                            <td class="font-mono">{render( block[key] )}</td>
+                            <th class="w-44 align-text-top">{def.key}</th>
+                            <td class="font-mono">{@html
+                                typeof def.render === 'function'
+                                    ? def.render( block[def.key] )
+                                    : block[def.key]
+                            }</td>
                         </tr>
                     {/each}
-                    <tr>
-                        <th class="align-text-top">
-                            <div class="flex flex-col">
-                                <span>transactions</span>
-                                {#if block.transactions.length}
-                                    &mdash;{block.transactions.length}
-                                {/if}
-                            </div>
-                        </th>
-                        <td>
-                            {#if Array.isArray( block.transactions )}
-                                <div class="flex flex-col gap-1 font-mono">
-                                    {#each block.transactions as hash}
-                                        <div>{hash}</div>
-
-
-                                    {/each}
-                                </div>
-                            {/if}
-                        </td>
-                    </tr>
                 </tbody>
             {/if}
         </table>
     </div>
-
 </Card>

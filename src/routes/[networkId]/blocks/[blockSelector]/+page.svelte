@@ -1,12 +1,12 @@
 <script>
-import Error from "../../../com/Error.svelte"
-import Block from "../../../com/Block.svelte";
-import BlockNavigation from "../../../com/BlockNavigation.svelte";
-import BlockJson from "../../../com/BlockJson.svelte";
+import Error from "../../../../com/Error.svelte"
+import Block from "../../../../com/Block.svelte";
+import BlockNavigation from "../../../../com/BlockNavigation.svelte";
+import RawJson from "../../../../com/RawJson.svelte";
+import StackedLayout from "../../../../com/StackedLayout.svelte";
 import { goto } from "$app/navigation";
 import { urls } from "$lib/url-helper.js";
 import { createBlockSelector } from "$lib/model/block.js";
-import StackedLayout from "../../../com/StackedLayout.svelte";
 
 export let data
 let error
@@ -18,7 +18,7 @@ const setError = msg => {
 
 const onChangeProvider = async ( event ) => {
     const { networkId } = event.detail
-    await goto( `/${networkId}/latest` )
+    await goto( urls.block( networkId ) )
 }
 
 const onClickPage = ( page ) => async ( event ) => {
@@ -33,7 +33,7 @@ const onSearch = async ( event ) => {
     if ( slug ) {
         await goto( urls.block( networkId, slug ) )
     } else {
-        setError( "Invalid query")
+        setError( "Invalid query" )
     }
 }
 
@@ -42,7 +42,7 @@ $:networkId = data.networkId
 $:networkOptions = data.networkOptions
 $: {
     if ( data.errorMessage ) {
-        setError(data.errorMessage)
+        setError( data.errorMessage )
     }
 }
 </script>
@@ -64,7 +64,7 @@ $: {
     />
 
     {#if data.block}
-        <Block block={data.block}/>
-        <BlockJson block={data.block}/>
+        <Block block={data.block} {networkId}/>
+        <RawJson obj={data.block}/>
     {/if}
 </StackedLayout>

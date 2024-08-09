@@ -27,7 +27,7 @@ onMount( () => {
         {#each networks as network}
             <div class="stats shadow overflow-x-hidden">
                 <a class="stat hover:bg-base-200/50 { network.isAvailable() ? 'bg-success/10':'bg-error/20' }"
-                   href="{urls.block(network.id,'latest')}" on:click={cancelNetworkRefresh}>
+                   href="{urls.block(network.id)}" on:click={cancelNetworkRefresh}>
                     <div class="stat-title uppercase text-xs">{network.status}</div>
                     <div class="stat-figure">
                         {#if 'up' === network.status}
