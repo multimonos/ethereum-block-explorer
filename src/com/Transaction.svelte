@@ -1,23 +1,51 @@
 <script>
 import Card from "./card/Card.svelte";
 import { urls } from "$lib/url-helper.js";
+import CopyableLink from "./data/CopyableLink.svelte";
 
 export let txn
 export let networkId
 
-const renderBlockNumber = n =>
+const renderBlockLink = n =>
     `<a href="${urls.block( networkId, n )}" class="link">${n}</a>`
 
+const renderAddressLink = address =>
+    `<a href="${urls.address( networkId, address )}" class="link">${address}</a>`
+
 const keys = [
-    { key: "blockNumber", render: renderBlockNumber },
-    { key: "hash" },
+    { key: "blockNumber", render: renderBlockLink },
+    {
+        key: "from",
+        com: CopyableLink,
+        props: ( x ) => ({
+            text: x,
+            copydata: x,
+            href: urls.address( networkId, x ),
+        })
+    },
+    {
+        key: "to",
+        com: CopyableLink,
+        props: ( x ) => ({
+            text: x,
+            copydata: x,
+            href: urls.address( networkId, x ),
+        })
+    },
+    {
+        key: "hash",
+        com: CopyableLink,
+        props: ( x ) => ({
+            text: x,
+            copydata: x,
+            href: urls.txn( networkId, x ),
+        })
+    },
     { key: "nonce" },
     { key: "blockHash" },
     { key: "blobVersionedHashes" },
     { key: "chainId" },
     { key: "data" },
-    { key: "from" },
-    { key: "to" },
     { key: "gasLimit" },
     { key: "gasPrice" },
     { key: "maxFeePerGas" },
@@ -47,11 +75,15 @@ const render = val => {
                     {#each keys as def}
                         <tr>
                             <th class="w-44">{def.key}</th>
-                            <td class="font-mono">{@html
-                                typeof def.render === 'function'
-                                    ? def.render( txn[def.key] )
-                                    : txn[def.key]
-                            }</td>
+                            <td class="font-mono">
+                                {#if typeof def.render === 'function'}
+                                    {@html def.render( txn[def.key] )}
+                                {:else if typeof def.com !== 'undefined'}
+                                    <svelte:component this={def.com} {...def.props( txn[def.key] )}/>
+                                {:else}
+                                    {txn[def.key]}
+                                {/if}
+                            </td>
                         </tr>
                     {/each}
                 </tbody>

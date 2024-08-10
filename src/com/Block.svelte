@@ -1,6 +1,7 @@
 <script>
 import Card from "./card/Card.svelte";
 import { urls } from "$lib/url-helper.js";
+import CopyableLink from "./data/CopyableLink.svelte";
 
 export let block
 export let networkId
@@ -60,12 +61,11 @@ const copy = async text => {
                                 <div class="flex flex-col gap-1">
                                     {#each block.transactions as hash}
                                         <div class="flex items-center">
-                                            <button
-                                                class="btn btn-xs btn-ghost"
-                                                on:click={()=>copy(hash)}>
-                                                <span class="icon-[solar--copy-bold-duotone]"></span>
-                                            </button>
-                                            <a class="link link-hover ml-1" href="{urls.txn( networkId, hash )}">{hash}</a>
+                                            <CopyableLink
+                                                href={urls.txn(networkId,hash)}
+                                                text={hash}
+                                                copydata={hash}
+                                                />
                                         </div>
                                     {/each}
                                 </div>
