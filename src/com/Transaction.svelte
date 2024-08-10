@@ -20,7 +20,7 @@ const keys = [
         props: ( x ) => ({
             text: x,
             copydata: x,
-            href: urls.address( networkId, x ),
+            href: urls.address( networkId, x )+'?match=from',
         })
     },
     {
@@ -29,7 +29,7 @@ const keys = [
         props: ( x ) => ({
             text: x,
             copydata: x,
-            href: urls.address( networkId, x ),
+            href: urls.address( networkId, x ) +'?match=to',
         })
     },
     {

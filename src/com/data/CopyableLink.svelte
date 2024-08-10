@@ -11,6 +11,7 @@ const copy = data => async event=>{
     }
 }
 </script>
+{#if text}
 <div class="flex items-center gap-1">
     <a {href} class="link">
         {@html text}
@@ -19,3 +20,4 @@ const copy = data => async event=>{
         <span class="icon-[solar--copy-line-duotone]"></span>
     </button>
 </div>
+{/if}
