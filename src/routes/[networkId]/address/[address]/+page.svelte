@@ -36,13 +36,11 @@ $: {
 
     <AddressNavigation on:search={onSearch}/>
 
-    {@html data.matchString}
+    <p>{@html data.criteria}</p>
 
     {#if txns.length}
         {#each txns as txn}
             <Transaction {txn} {networkId}/>
         {/each}
-    {:else}
-      <p>No transactions found for address <span class="font-mono">{data.address}</span>.</p>
     {/if}
 </StackedLayout>

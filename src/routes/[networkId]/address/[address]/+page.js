@@ -5,7 +5,6 @@ import { findTransactionsWhere } from "$lib/model/address.js";
 
 
 export async function load( { params, url } ) {
-    console.log( { params, url } )
 
     let errorMessage
 
@@ -40,13 +39,13 @@ export async function load( { params, url } ) {
         filter
     )
 
-    const matchString = `Found ${txns.length} transactions ${filterName} ${address}`
+    const criteria = `${txns.length} transactions found matching <kbd class="kbd kbd-sm">${filterName} = ${address}</kbd>`
 
     return {
         address,
         txns,
         errorMessage,
-        matchString,
+        criteria,
         // txn,
         // networkOptions,
     }
